@@ -52,7 +52,7 @@ export default function TuVan() {
         <button
           onClick={onSubmit}
           disabled={status === "sending"}
-          className="rounded-xl bg-cyan-500 px-4 py-3 font-semibold text-slate-950 hover:bg-cyan-400 disabled:opacity-60"
+          className="rounded-xl bg-amber-500 px-4 py-3 font-semibold text-slate-950 hover:bg-amber-400 disabled:opacity-60"
         >
           {status === "sending" ? "Đang gửi..." : "Gửi yêu cầu"}
         </button>

@@ -20,7 +20,7 @@ export default function Page() {
           <div className="mt-6 flex flex-wrap gap-3">
             <a
               href="#dang-ky"
-              className="rounded-xl bg-cyan-500 px-4 py-3 font-semibold text-slate-950 hover:bg-cyan-400"
+              className="rounded-xl bg-amber-500 px-4 py-3 font-semibold text-slate-950 hover:bg-amber-400"
             >
               Đăng ký ngay
             </a>

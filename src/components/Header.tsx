@@ -43,7 +43,7 @@ export default function Header() {
         <div className="md:hidden">
           <a
             href="#dang-ky"
-            className="rounded-xl bg-cyan-500 px-3 py-2 text-sm font-medium text-slate-950 hover:bg-cyan-400"
+            className="rounded-xl bg-amber-500 px-3 py-2 text-sm font-medium text-slate-950 hover:bg-amber-400"
           >
             Đăng ký
           </a>

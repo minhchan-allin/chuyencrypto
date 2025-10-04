@@ -1,49 +1,68 @@
+import Image from "next/image"
 import Header from "@/components/Header"
 import ThongTin from "@/sections/ThongTin"
 import DangKy from "@/sections/DangKy"
 import DoiNgu from "@/sections/DoiNgu"
 import TuVan from "@/sections/TuVan"
 
-
-export default function Page() {
+/** --- HERO (không default export) --- */
+function HeroBlock() {
   return (
-    <div id="top">
-      <Header />
+    <section className="relative pt-12">
+      <div className="mx-auto max-w-6xl px-1 py-16">
+        <div className="flex items-center justify-between rounded-2xl bg-gradient-to-b from-slate-900 to-slate-950 px-8 py-12">
+          {/* Trái: tiêu đề + nút */}
+          <div>
+            <h1 className="text-3xl font-bold text-white">Chuyện Crypto</h1>
+            <p className="mt-2 text-slate-300">
+              Cộng đồng giao lưu kiến thức, học hỏi – chia sẻ – thị trường Crypto.
+            </p>
+            <div className="mt-6 flex gap-4">
+              <a
+                href="#dang-ky"
+                className="rounded-lg bg-amber-500 px-5 py-3 font-semibold text-slate-950 hover:bg-amber-400 transition"
+              >
+                Đăng ký ngay
+              </a>
+              <a
+                href="https://chuyencrypto.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-lg border border-white/20 px-5 py-3 font-semibold text-white hover:bg-white/10 transition"
+              >
+                Tham gia cộng đồng
+              </a>
+            </div>
+          </div>
 
-      <section className="mx-auto max-w-6xl px-4 pt-28 pb-16">
-        <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-slate-900 to-slate-800 p-8">
-          <h1 className="text-3xl font-extrabold md:text-4xl">Chuyện Crypto</h1>
-          <p className="mt-3 max-w-2xl text-slate-300">
-            Cộng đồng đăng ký sàn qua link ref, học hỏi – chia sẻ – nhận ưu đãi.
-            Bắt đầu với Binance & Bybit.
-          </p>
-          <div className="mt-6 flex flex-wrap gap-3">
-            <a
-              href="#dang-ky"
-              className="rounded-xl bg-amber-500 px-4 py-3 font-semibold text-slate-950 hover:bg-amber-400"
-            >
-              Đăng ký ngay
-            </a>
-            <a
-              href="#thong-tin"
-              className="rounded-xl border border-white/10 px-4 py-3 font-semibold text-slate-200 hover:bg-white/5"
-            >
-              Tìm hiểu thêm
-            </a>
+          {/* Phải: LOGO */}
+          <div className="hidden md:block">
+            <Image
+              src="/logo.png"             // đặt file trong /public/logo.png
+              alt="Chuyện Crypto Logo"
+              width={150}
+              height={150}
+              className="object-contain"
+            />
           </div>
         </div>
-      </section>
+      </div>
+    </section>
+  )
+}
 
-      <ThongTin />
-      <DangKy />
-      <DoiNgu />
-      <TuVan />
-
-      <footer className="border-t border-white/10 py-10">
-        <div className="mx-auto max-w-6xl px-4 text-sm text-slate-400">
-          © {new Date().getFullYear()} Chuyện Crypto
-        </div>
-      </footer>
-    </div>
+/** --- TRANG CHỦ (chỉ 1 default export) --- */
+export default function Page() {
+  return (
+    <>
+      <Header />
+      <main id="top">
+        <HeroBlock />
+        <ThongTin />
+        <DangKy />
+        <DoiNgu />
+        <TuVan />
+      </main>
+    </>
   )
 }

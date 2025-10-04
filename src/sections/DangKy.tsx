@@ -2,6 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react"
 
+import Link from "next/link"
+
 type ApiExchange = { key: string; name: string; url: string | null }
 
 // Card cố định để dễ kiểm soát layout & logo
@@ -61,8 +63,8 @@ export default function DangKy() {
     <section id="dang-ky" className="mx-auto max-w-6xl scroll-mt-24 px-4 py-24">
       <h2 className="text-2xl font-bold">Đăng ký</h2>
       <p className="mt-3 max-w-3xl text-slate-300">
-        Chọn sàn bạn muốn mở tài khoản. Hiện có <strong>Binance</strong> và{" "}
-        <strong>Bybit</strong>. Sau này sẽ bổ sung thêm sàn khác.
+        Chọn sàn bạn muốn mở tài khoản. Hiện đang có 2 đối tác chính <strong>Binance</strong> và{" "}
+        <strong>Bybit</strong>.
       </p>
 
       {loading && <p className="mt-4 text-slate-400">Đang tải link…</p>}
@@ -102,13 +104,12 @@ export default function DangKy() {
                 {card.url ? "Đăng ký" : "Chưa có link"}
               </a>
 
-              {/* Nút Hướng dẫn */}
-              <a
-                href={card.guideHref}
-                className="rounded-xl border border-white/15 px-4 py-2 font-semibold text-slate-100 hover:bg-white/5 transition"
-              >
-                Hướng dẫn
-              </a>
+              <Link
+  href={`/huongdan/${card.key}`}
+  className="rounded-xl border border-white/15 px-4 py-2 font-semibold text-slate-100 hover:bg-white/5 transition"
+>
+  Hướng dẫn
+</Link>
             </div>
           </article>
         ))}

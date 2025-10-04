@@ -26,7 +26,7 @@ export default function Header() {
     >
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
         <a href="#top" className="flex items-center gap-2">
-          <img src="/logo.png" alt="Chuyện Crypto" className="h-8 w-8" />
+          {/* <img src="/logo.png" alt="Chuyện Crypto" className="h-8 w-8" /> */}
   <span className="text-lg font-semibold">Chuyện Crypto</span>
         </a>
         <nav className="hidden gap-6 md:flex">

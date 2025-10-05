@@ -15,8 +15,8 @@ type VideoSpec =
 
 type Section = {
   heading: string
-  steps: Step[]
-  video?: VideoSpec
+  steps: { title: string; desc: string }[]
+  video?: { type: "youtube" | "file"; src: string; note?: string }
 }
 
 type Guide = {
@@ -67,14 +67,13 @@ function SectionBlock({
       <ol className="mt-4 space-y-3">
         {s.steps.map((st, i) => (
           <li key={i} className="rounded-xl border border-white/10 p-4">
-            {/* Nếu là bước đầu tiên (Mở link ref) thì hiển thị nút Đăng ký bên phải */}
             <div className="flex items-start justify-between gap-3">
               <div className="pr-3">
                 <p className="font-semibold">{st.title}</p>
                 <p className="text-sm text-slate-300">{st.desc}</p>
               </div>
 
-              {/* Nút "Đăng ký" chỉ hiện ở BƯỚC 1 của CÁCH 1 (tùy bạn muốn) */}
+              {/* Chỉ hiện ở Cách 1 - Bước 1 và khi có refUrl */}
               {index === 0 && i === 0 && refUrl && (
                 <a
                   href={refUrl}
@@ -90,7 +89,23 @@ function SectionBlock({
         ))}
       </ol>
 
-      <Video video={s.video} />
+      {/* Video nếu có */}
+      {s.video?.type === "youtube" && (
+        <iframe
+          className="mt-4 h-96 w-full rounded-lg"
+          src={s.video.src}
+          title="YouTube video"
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+        />
+      )}
+      {s.video?.type === "file" && (
+        <video controls className="mt-4 h-96 w-full rounded-lg">
+          <source src={s.video.src} type="video/mp4" />
+          Trình duyệt không hỗ trợ video.
+        </video>
+      )}
     </section>
   )
 }
@@ -113,7 +128,7 @@ const GUIDES: Record<string, Guide> = {
           { title: "Đăng nhập lần đầu", desc: "Hoàn tất tạo tài khoản và đăng nhập." },
         ],
         // video: { type: "file", src: "/videos/binance-register.mp4", note: "Đặt file vào public/videos/binance-register.mp4" },
-        video: { type: "youtube", src: "https://www.youtube.com/embed/n20sFivqyug?si=bdqbT7NUrikLeazP" },
+        video: { type: "youtube", src: "https://www.youtube.com/embed/7HYuaAtsg-A?si=67NnykiUZgGulfEN" },
       },
       {
         heading: "Cách 2: KYC tài khoản",
@@ -124,41 +139,32 @@ const GUIDES: Record<string, Guide> = {
           { title: "Chờ duyệt", desc: "Vài phút tới vài giờ." },
           { title: "Kiểm tra trạng thái", desc: "Khi KYC Passed, tính năng được mở rộng." },
         ],
+        video: { type: "youtube", src: "https://www.youtube.com/embed/oTjbE_j88g8?si=yWGNOmU0LwDd6PQb" },
       },
       {
-        heading: "Cách 3: Bật bảo mật 2FA",
+        heading: "Cách 3: Nạp tiền qua P2P",
         steps: [
-          { title: "Vào Security", desc: "Bật Google Authenticator/SMS 2FA." },
-          { title: "Lưu khoá khôi phục", desc: "Cất giữ secret key/backup codes cẩn thận." },
-          { title: "Anti-phishing code", desc: "Thiết lập mã để nhận diện email chính chủ Binance." },
-          { title: "Whitelist rút tiền", desc: "Chỉ cho phép địa chỉ ví tin cậy." },
-          { title: "Rà soát đăng nhập", desc: "Sign out phiên lạ nếu có." },
+          { title: "Chọn phương thức", desc: "P2P (VND), hoặc chuyển khoản đối tác." },
+          { title: "Chọn người bán hợp lí", desc: "Phải có lệnh thành công cao, đánh giá tốt từ cộng đồng,..." },
+          { title: "Chuyển khoản và Xác nhận lệnh", desc: "Nội dung chuyển phải là số lệnh và đúng số tiền cần mua" },
+          { title: "Kiểm tra số dư", desc: "Sau khi vào ví, kiểm tra ở Wallet" },
         ],
+        video: { type: "youtube", src: "https://www.youtube.com/embed/gXJGYlYgHWI?si=SYt_FUztqgAoR9n_" },
       },
       {
-        heading: "Cách 4: Nạp tiền",
+        heading: "Cách 4: Xóa tài khoản Binance",
         steps: [
-          { title: "Chọn phương thức", desc: "P2P (VND), on-chain (USDT/USDC/BTC/ETH…), hoặc chuyển khoản đối tác." },
-          { title: "Chọn mạng đúng", desc: "USDT có ERC20/TRC20/BSC… phải trùng với bên gửi." },
-          { title: "Sao chép địa chỉ ví", desc: "Đúng token/memo (nếu có) trước khi gửi." },
-          { title: "Xác nhận lệnh", desc: "Kiểm tra phí và thời gian xử lý." },
-          { title: "Kiểm tra số dư", desc: "Sau khi vào ví, kiểm tra ở Wallet → Spot." },
+          { title: "Chọn cài đặt", desc: "Trong phần tài khoản" },
+          { title: "Chọn Security", desc: "Kéo xuống kiếm Manage Account" },
+          { title: "Chọn Delete Account", desc: "Chọn No longer want to use this account" },
+          { title: "Lưu ý", desc: "Không còn để lệnh limit Future và tổng tài sản dưới 5$" },
         ],
-        video: { type: "file", src: "/videos/binance-deposit.mp4", note: "Đặt file vào public/videos/binance-deposit.mp4" },
-      },
-      {
-        heading: "Cách 5: Giao dịch cơ bản",
-        steps: [
-          { title: "Chọn chế độ", desc: "Convert (đơn giản) hoặc Spot (đầy đủ lệnh)." },
-          { title: "Chọn cặp", desc: "Ví dụ BTC/USDT." },
-          { title: "Đặt lệnh", desc: "Market/Limit tuỳ nhu cầu." },
-          { title: "Theo dõi lịch sử", desc: "Order History / Trade History." },
-          { title: "Rút tiền", desc: "Chọn mạng và phí phù hợp trước khi rút." },
-        ],
-        video: { type: "youtube", src: "https://www.youtube.com/embed/VIDEO_ID_BINANCE_TRADE" },
+        video: { type: "youtube", src: "https://www.youtube.com/embed/yiCztfJVNag?si=EFLV-imyyagU8Wgz" },
       },
     ],
   },
+
+  // Bybit
   bybit: {
     title: "Hướng dẫn Bybit",
     intro:
@@ -169,50 +175,59 @@ const GUIDES: Record<string, Guide> = {
         steps: [
           { title: "Mở link ref", desc: "Nhấn nút Đăng ký (ref CHUYENCRYPTO) ở trang chủ." },
           { title: "Nhập thông tin", desc: "Email/SĐT, mật khẩu mạnh." },
-          { title: "Xác minh OTP", desc: "Nhập mã xác thực gửi về." },
-          { title: "KYC", desc: "Thực hiện xác minh danh tính để mở tính năng." },
-          { title: "Bật 2FA", desc: "Bật Google Authenticator/SMS." },
+          { title: "Xác minh OTP", desc: "Nhập mã xác thực gửi về mail." },
+          { title: "Đồng ý điều khoản", desc: "Đọc kỹ và xác nhận." },
+          { title: "Đăng nhập lần đầu", desc: "Hoàn tất tạo tài khoản và đăng nhập." },
         ],
-        video: { type: "file", src: "/videos/bybit-register.mp4", note: "Đặt file vào public/videos/bybit-register.mp4" },
+        video: { type: "youtube", src: "https://www.youtube.com/embed/MaKZlQPhOxQ?si=9U2dSz09TvoEoARb" },
       },
       {
-        heading: "Cách 2: Nạp tiền",
+        heading: "Cách 2: KYC tài khoản",
         steps: [
-          { title: "Assets → Deposit", desc: "Chọn tài sản và mạng (ví dụ USDT TRC20 phí rẻ)." },
-          { title: "Copy địa chỉ ví", desc: "Đúng token/memo nếu yêu cầu." },
-          { title: "Gửi từ ví/sàn khác", desc: "Theo dõi hash trên explorer." },
-          { title: "Chờ xác nhận", desc: "On-chain xong sẽ thấy số dư." },
-          { title: "Kiểm tra ví", desc: "Spot/Derivatives theo lựa chọn của bạn." },
+          { title: "Vào Profile → Identification", desc: "Chọn Begin Verification." },
+          { title: "Tải giấy tờ", desc: "CMND/CCCD/Hộ chiếu còn hạn." },
+          { title: "Xác thực khuôn mặt", desc: "Làm theo hướng dẫn trên màn hình." },
+          { title: "Chờ duyệt", desc: "Vài phút tới vài giờ." },
+          { title: "Kiểm tra trạng thái", desc: "Khi KYC Passed, tính năng được mở rộng." },
         ],
-        video: { type: "file", src: "/videos/bybit-deposit.mp4", note: "Đặt file vào public/videos/bybit-deposit.mp4" },
+        video: { type: "youtube", src: "https://www.youtube.com/embed/gHaz9d2DaWk?si=3k3B32Nxu1kV6fDk" },
       },
       {
-        heading: "Cách 3: Lưu ý phái sinh",
+        heading: "Cách 3: Hướng dẫn chuyển USDT từ Binance sang Bybit",
         steps: [
-          { title: "Chọn chế độ ký quỹ", desc: "Isolated để giới hạn rủi ro từng lệnh; Cross cho người có kinh nghiệm." },
-          { title: "Đòn bẩy hợp lý", desc: "Bắt đầu nhỏ; tránh over-leverage." },
-          { title: "Đặt SL/TP", desc: "Luôn có stop-loss để bảo vệ tài khoản." },
-          { title: "Funding & phí", desc: "Theo dõi funding mỗi 8h; chú ý phí giao dịch." },
-          { title: "Kỷ luật giao dịch", desc: "Không FOMO, có kế hoạch quản trị vốn." },
+          { title: "Chuyển tiền vào ví Spot Binance", desc: "" },
+          { title: "Chọn mạng để rút", desc: "Lưu ý mạng của 2 sàn phải giống nhau" },
+          { title: "Lưu ảnh địa chỉ ví của sàn cần nạp", desc: "Trường hợp này đơn giản nhất" },
+          { title: "Kiểm tra trên chuỗi", desc: "Chờ tiền vào ví" },
+          { title: "Lưu ý", desc: "Hãy xem toàn bộ Video rồi thực hành" },
         ],
-        video: { type: "youtube", src: "https://www.youtube.com/embed/VIDEO_ID_BYBIT_DERI" },
+        video: { type: "youtube", src: "https://www.youtube.com/embed/tehF6rHUEsQ?si=86FrZgiqn1TeQ1eX" },
+      },
+      {
+        heading: "Cách 4: Nạp tiền qua P2P",
+        steps: [
+          { title: "Lưu ý", desc: "Nội dung chuyển khoản phải đúng với số lệnh" },
+        ],
+        video: { type: "youtube", src: "https://www.youtube.com/embed/6sodJFFvncQ?si=8-6Yn9vu0KX3qRth" },
       },
     ],
   },
 }
 
 /* --------- Page --------- */
-export default function Page({ params }: { params: { san: string } }) {
-  const key = params.san?.toLowerCase()
-  const guide = GUIDES[key]
-  const refUrl = REF_LINKS[key]
-
+export default async function Page(
+  { params }: { params: Promise<{ san: string }> } // 🔧 Next 15: params là Promise
+) {
+  const { san } = await params;                    // ✅ phải await
+  const key = san?.toLowerCase();
+  const guide = GUIDES[key];
+  const refUrl = REF_LINKS[key];
 
   if (!guide) {
     return (
       <div className="mx-auto max-w-3xl px-4 py-16">
         <a href="/" className="text-sm text-slate-400 hover:text-slate-200">← Về trang chủ</a>
-        <h1 className="mt-3 text-3xl font-bold">Không tìm thấy hướng dẫn cho: {params.san}</h1>
+        <h1 className="mt-3 text-3xl font-bold">Không tìm thấy hướng dẫn cho: {san}</h1>
         <p className="mt-2 text-slate-300">Hãy kiểm tra lại đường dẫn.</p>
       </div>
     )
@@ -234,21 +249,12 @@ export default function Page({ params }: { params: { san: string } }) {
       </nav>
 
       {guide.sections.map((s, i) => (
-        <SectionBlock key={i} s={s} index={i} />
+        <SectionBlock key={i} s={s} index={i} refUrl={refUrl} />
       ))}
 
       <div className="mt-10 rounded-xl border border-white/10 bg-slate-900/50 p-4 text-sm text-slate-400">
         Lưu ý: Crypto là tài sản rủi ro cao. Giao dịch có trách nhiệm.
       </div>
-    </div>
-  )
-
-   return (
-    <div className="mx-auto max-w-3xl px-4 py-16">
-      {/* ... title, intro, toc ... */}
-      {guide.sections.map((s, i) => (
-        <SectionBlock key={i} s={s} index={i} refUrl={refUrl} />
-      ))}
     </div>
   )
 

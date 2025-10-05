@@ -1,5 +1,6 @@
 // middleware.ts (ở root)
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
+
 
 function unauthorized() {
   return new NextResponse('Authentication required', {
@@ -16,7 +17,7 @@ export function middleware(req: Request) {
     return NextResponse.next()
   }
 
-  const auth = (req.headers as any).get('authorization') as string | null
+  const auth = req.headers.get("authorization")
   if (!auth?.startsWith('Basic ')) return unauthorized()
 
   // Decode "Basic base64(user:pass)"

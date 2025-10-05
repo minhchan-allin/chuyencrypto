@@ -2,28 +2,33 @@ import { NextResponse } from "next/server"
 import { db } from "@/lib/db"
 import { isValidVNMobileE164, isValidVNMobileLocal, normalizePhoneVN } from "@/lib/phone"
 
-export async function POST(req: Request) {
-  const body = await req.json().catch(() => ({})) as any
+type ContactBody = {
+  name?: string
+  email?: string
+  phone?: string
+  message?: string
+}
 
-  const name = String(body?.name || "").trim()
-  const email = String(body?.email || "").trim()
-  let   phone = String(body?.phone || "").trim()
-  const message = String(body?.message || "").trim()
+export async function POST(req: Request) {
+  const body = (await req.json().catch(() => ({}))) as ContactBody
+
+  const name = String(body?.name ?? "").trim()
+  const email = String(body?.email ?? "").trim()
+  let   phone = String(body?.phone ?? "").trim()
+  const message = String(body?.message ?? "").trim()
 
   const errors: string[] = []
   if (!name) errors.push("name")
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.push("email")
   if (!phone) errors.push("phone")
 
-  // chuẩn hoá & validate phone
   const local = phone.replace(/[\s.\-()]/g, "")
   const e164 = normalizePhoneVN(local)
   if (!(isValidVNMobileLocal(local) || isValidVNMobileE164(e164))) {
     errors.push("phone_format")
   } else {
-    phone = e164 // lưu E.164
+    phone = e164
   }
-
   if (message.length > 1000) errors.push("message_len")
 
   if (errors.length) {

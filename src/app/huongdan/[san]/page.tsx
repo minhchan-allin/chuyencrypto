@@ -1,5 +1,5 @@
 // src/app/huongdan/[san]/page.tsx
-
+import Link from "next/link"
 // Map ref theo sàn => đọc trực tiếp từ ENV
 const REF_LINKS: Record<string, string | undefined> = {
   binance: process.env.REF_BINANCE,
@@ -226,7 +226,7 @@ export default async function Page(
   if (!guide) {
     return (
       <div className="mx-auto max-w-3xl px-4 py-16">
-        <a href="/" className="text-sm text-slate-400 hover:text-slate-200">← Về trang chủ</a>
+        <Link href="/" className="text-sm text-slate-400 hover:text-slate-200">← Về trang chủ</Link>
         <h1 className="mt-3 text-3xl font-bold">Không tìm thấy hướng dẫn cho: {san}</h1>
         <p className="mt-2 text-slate-300">Hãy kiểm tra lại đường dẫn.</p>
       </div>
@@ -235,7 +235,7 @@ export default async function Page(
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-16">
-      <a href="/" className="text-sm text-slate-400 hover:text-slate-200">← Về trang chủ</a>
+      <Link href="/" className="text-sm text-slate-400 hover:text-slate-200">← Về trang chủ</Link>
       <h1 className="mt-3 text-3xl font-bold">{guide.title}</h1>
       <p className="mt-2 text-slate-300">{guide.intro}</p>
 

@@ -2,7 +2,7 @@
 
 // Chuẩn hoá: "0905 246 473", "84 905..." → "+84905246473"
 export function normalizePhoneVN(input: string): string {
-  let p = input.replace(/[\s.\-()]/g, "") // bỏ khoảng trắng / dấu
+  const p = input.replace(/[\s.\-()]/g, "") // bỏ khoảng trắng / dấu
   // +84...  → giữ nguyên
   if (p.startsWith("+84")) return "+84" + p.slice(3).replace(/^0+/, "")
   // 84...   → thêm +

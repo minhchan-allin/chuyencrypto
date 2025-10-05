@@ -1,5 +1,5 @@
 "use client"
-import { useState, useMemo } from "react"
+import { useState} from "react"
 import { useRouter } from "next/navigation"
 
 type Row = {
@@ -25,25 +25,24 @@ export default function AdminContactsTable({ initialRows }: { initialRows: Row[]
   const router = useRouter()
 
   async function handleDelete(id: number) {
-  if (!confirm(`Xóa bản ghi #${id}?`)) return
+    if (!confirm(`Xóa bản ghi #${id}?`)) return
 
-  try {
-    console.log("[UI] Deleting id =", id)
-    const res = await fetch(`/admin/api/contacts/${id}`, { method: "DELETE" }) // 👈 dùng /:id, KHÔNG dùng ?id=
-    const text = await res.text()
-    console.log("[UI] status =", res.status, "body =", text)
+    try {
+      const res = await fetch(`/admin/api/contacts/${id}`, { method: "DELETE" })
+      const text = await res.text()
+      const data = (() => {
+        try { return JSON.parse(text) as { ok: boolean; changes?: number; error?: string } }
+        catch { return { ok: false as const, error: "invalid json" } }
+      })()
 
-    let data: any = {}
-    try { data = JSON.parse(text) } catch {}
-
-    if (!res.ok || !data?.ok) {
-      alert(`Xóa thất bại: ${data?.error || res.status}`)
-      return
-    }
+      if (!res.ok || !data.ok) {
+        alert(`Xóa thất bại: ${data.error ?? res.status}`)
+        return
+      }
 
     setRows((r) => r.filter((x) => x.id !== id))
     router.refresh()
-  } catch (e: any) {
+  } catch (e: unknown) {
     console.error("[UI] DELETE error", e)
     alert("Lỗi mạng khi gọi API xoá")
   }

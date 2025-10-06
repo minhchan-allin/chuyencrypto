@@ -26,30 +26,30 @@ type Guide = {
 }
 
 /* --------- Video component --------- */
-function Video({ video }: { video?: VideoSpec }) {
-  if (!video) return null
-  if (video.type === "youtube") {
-    return (
-      <div className="mt-4 aspect-video overflow-hidden rounded-xl border border-white/10">
-        <iframe
-          className="h-full w-full"
-          src={video.src}
-          title="Video hướng dẫn"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowFullScreen
-        />
-      </div>
-    )
-  }
-  return (
-    <div className="mt-4 overflow-hidden rounded-xl border border-white/10">
-      <video controls className="w-full">
-        <source src={video.src} />
-      </video>
-      {video.note && <p className="mt-2 text-xs text-slate-400">{video.note}</p>}
-    </div>
-  )
-}
+// function Video({ video }: { video?: VideoSpec }) {
+//   if (!video) return null
+//   if (video.type === "youtube") {
+//     return (
+//       <div className="mt-4 aspect-video overflow-hidden rounded-xl border border-white/10">
+//         <iframe
+//           className="h-full w-full"
+//           src={video.src}
+//           title="Video hướng dẫn"
+//           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+//           allowFullScreen
+//         />
+//       </div>
+//     )
+//   }
+//   return (
+//     <div className="mt-4 overflow-hidden rounded-xl border border-white/10">
+//       <video controls className="w-full">
+//         <source src={video.src} />
+//       </video>
+//       {video.note && <p className="mt-2 text-xs text-slate-400">{video.note}</p>}
+//     </div>
+//   )
+// }
 
 function SectionBlock({
   s,

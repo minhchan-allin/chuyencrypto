@@ -9,7 +9,7 @@ function unauthorized() {
   })
 }
 
-export function middleware(req: Request) {
+export function middleware(req: NextRequest) {
   const url = new URL(req.url)
 
   // Chỉ áp dụng cho /admin/*

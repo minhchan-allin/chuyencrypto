@@ -17,6 +17,7 @@
     "paths": {
       "@/*": ["src/*"]                      // ✅ Giữ nguyên alias
     },
+    
     "plugins": [
       {
         "name": "next"

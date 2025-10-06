@@ -1,13 +1,8 @@
 import { NextResponse } from "next/server"
-import { db } from "@/lib/db"
 import { isValidVNMobileE164, isValidVNMobileLocal, normalizePhoneVN } from "@/lib/phone"
+import { insertContact, listContacts } from "@/lib/db"
 
-type ContactBody = {
-  name?: string
-  email?: string
-  phone?: string
-  message?: string
-}
+type ContactBody = { name?: string; email?: string; phone?: string; message?: string }
 
 export async function POST(req: Request) {
   const body = (await req.json().catch(() => ({}))) as ContactBody
@@ -31,20 +26,13 @@ export async function POST(req: Request) {
   }
   if (message.length > 1000) errors.push("message_len")
 
-  if (errors.length) {
-    return NextResponse.json({ ok: false, errors }, { status: 400 })
-  }
+  if (errors.length) return NextResponse.json({ ok: false, errors }, { status: 400 })
 
-  const info = db.prepare(
-    "INSERT INTO contacts (name, email, phone, message) VALUES (?, ?, ?, ?)"
-  ).run(name, email, phone, message)
-
-  return NextResponse.json({ ok: true, id: info.lastInsertRowid })
+  await insertContact(name, email, phone, message)
+  return NextResponse.json({ ok: true })
 }
 
 export async function GET() {
-  const rows = db.prepare(
-    "SELECT id, name, email, phone, message, created_at FROM contacts ORDER BY id DESC LIMIT 200"
-  ).all()
+  const rows = await listContacts(200)
   return NextResponse.json({ ok: true, rows })
 }

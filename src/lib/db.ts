@@ -1,7 +1,7 @@
 // src/lib/db.ts
 import "server-only"
 
-// Nếu có DATABASE_URL -> dùng Postgres, ngược lại SQLite local
+// Nếu có DATABASE_URL -> dùng Postgres (Vercel), không thì SQLite (local)
 const USE_PG = !!process.env.DATABASE_URL
 
 /* ================== Postgres (prod) ================== */
@@ -11,20 +11,29 @@ async function getPg() {
     const { Pool } = await import("pg")
     pgPool = new Pool({
       connectionString: process.env.DATABASE_URL,
-      ssl: { rejectUnauthorized: false }, // Supabase/Neon thường yêu cầu
+      ssl: { rejectUnauthorized: false },
     })
   }
   return pgPool!
 }
 
 /* ================== SQLite (dev) ================== */
-type BetterSqlite3 = typeof import("better-sqlite3")
-type SqliteDatabase = import("better-sqlite3").Database
+/** Tối thiểu những API ta dùng của better-sqlite3 */
+interface SqliteStmt {
+  run: (...args: unknown[]) => { changes: number; lastInsertRowid?: number | bigint }
+  all: (...args: unknown[]) => unknown[]
+}
+interface SqliteLike {
+  prepare: (sql: string) => SqliteStmt
+}
 
-let sqliteDb: SqliteDatabase | null = null
+let sqliteDb: SqliteLike | null = null
 async function getSqlite() {
   if (!sqliteDb) {
-    const Better: BetterSqlite3 = (await import("better-sqlite3")).default as unknown as BetterSqlite3
+    // default export là constructor Database (CJS)
+    const BetterDefault = (await import("better-sqlite3")).default as unknown as new (
+      file: string
+    ) => SqliteLike
     const path = await import("node:path")
     const fs = await import("node:fs")
 
@@ -32,7 +41,7 @@ async function getSqlite() {
     if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir)
     const file = path.join(dataDir, "data.db")
 
-    sqliteDb = new (Better as any)(file) as SqliteDatabase
+    sqliteDb = new BetterDefault(file)
     sqliteDb
       .prepare(
         `create table if not exists contacts (
@@ -64,13 +73,16 @@ export async function insertContact(name: string, email: string, phone: string, 
     const pg = await getPg()
     await pg.query(
       "insert into contacts (name,email,phone,message) values ($1,$2,$3,$4)",
-      [name, email, phone, message]
+      [name, email, phone, message],
     )
     return
   }
   const db = await getSqlite()
   db.prepare("insert into contacts (name,email,phone,message) values (?,?,?,?)").run(
-    name, email, phone, message
+    name,
+    email,
+    phone,
+    message,
   )
 }
 
@@ -79,7 +91,7 @@ export async function listContacts(limit = 200): Promise<ContactRow[]> {
     const pg = await getPg()
     const res = await pg.query(
       "select id, name, email, phone, message, created_at from contacts order by id desc limit $1",
-      [limit]
+      [limit],
     )
     type PgRow = {
       id: string | number
@@ -111,7 +123,7 @@ export async function listContacts(limit = 200): Promise<ContactRow[]> {
   }
   const rows = db
     .prepare(
-      "select id, name, email, phone, message, created_at from contacts order by id desc limit ?"
+      "select id, name, email, phone, message, created_at from contacts order by id desc limit ?",
     )
     .all(limit) as SqlRow[]
 
@@ -121,7 +133,7 @@ export async function listContacts(limit = 200): Promise<ContactRow[]> {
     email: r.email,
     phone: r.phone,
     message: r.message,
-    created_at: typeof r.created_at === "string" ? r.created_at : new Date().toISOString(),
+    created_at: r.created_at,
   }))
 }
 

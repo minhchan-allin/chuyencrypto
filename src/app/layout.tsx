@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: "Chuyện Crypto",
   description: "Cộng đồng học hỏi, chia sẻ – thị trường Crypto Việt Nam",
   icons: {
-    icon: "/favicon.ico",
+    icon: "/icons/favicon.ico",
   },
 
 }

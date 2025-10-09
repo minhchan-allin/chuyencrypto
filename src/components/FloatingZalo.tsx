@@ -15,10 +15,10 @@ export default function FloatingZalo() {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Chat Zalo"
-        className="flex h-14 w-14 items-center justify-center rounded-full bg-cyan-500 shadow-lg ring-1 ring-white/20
+        className="flex h-14 w-14 items-center justify-center rounded-full bg-cyan-100 shadow-lg ring-1 ring-white/20
                    hover:scale-105 active:scale-95 transition"
       >
-        <Image src="/icons/zalo.png" alt="Zalo" width={26} height={26} priority />
+        <Image src="/icons/zalo.png" alt="Zalo" width={35} height={35} priority />
       </a>
     </div>
   )

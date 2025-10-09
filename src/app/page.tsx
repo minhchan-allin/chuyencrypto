@@ -25,7 +25,7 @@ function HeroBlock() {
                 Tham gia Trade
               </a>
               <a
-                href="https://chuyencrypto.com"
+                href="https://zalo.me/g/ghxxre803"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="rounded-lg border border-white/20 px-5 py-3 font-semibold text-white hover:bg-white/10 transition"

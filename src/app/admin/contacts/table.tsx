@@ -11,13 +11,23 @@ type Row = {
   created_at: string // SQLite UTC 'YYYY-MM-DD HH:mm:ss'
 }
 
-function formatVN(utcStr: string) {
-  const d = new Date(utcStr.replace(" ", "T") + "Z") // coi created_at là UTC
+function formatVN(d?: string | Date | null) {
+  if (!d) return "—"
+
+  // Nếu là chuỗi kiểu SQLite ("2025-10-03 04:34:05"), thêm chữ T vào giữa để hợp lệ
+  const fixed = typeof d === "string" ? d.replace(" ", "T") : d
+  const date = new Date(fixed)
+
+  if (isNaN(date.getTime())) return "—" // Tránh crash nếu invalid
+
   return new Intl.DateTimeFormat("vi-VN", {
-    timeZone: "Asia/Ho_Chi_Minh",
-    year: "numeric", month: "2-digit", day: "2-digit",
-    hour: "2-digit", minute: "2-digit", second: "2-digit",
-  }).format(d)
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  }).format(date)
 }
 
 export default function AdminContactsTable({ initialRows }: { initialRows: Row[] }) {

@@ -5,6 +5,10 @@ import FloatingZalo from "@/components/FloatingZalo"
 export const metadata: Metadata = {
   title: "Chuyện Crypto",
   description: "Cộng đồng học hỏi, chia sẻ – thị trường Crypto Việt Nam",
+  icons: {
+    icon: "/favicon.ico",
+  },
+
 }
 
 export default function RootLayout({
@@ -21,3 +25,4 @@ export default function RootLayout({
     </html>
   )
 }
+

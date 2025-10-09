@@ -22,7 +22,7 @@ function HeroBlock() {
                 href="#dang-ky"
                 className="rounded-lg bg-amber-500 px-5 py-3 font-semibold text-slate-950 hover:bg-amber-400 transition"
               >
-                Đăng ký ngay
+                Tham gia Trade
               </a>
               <a
                 href="https://chuyencrypto.com"
